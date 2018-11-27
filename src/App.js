@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { TextField, RaisedButton } from 'material-ui'
+import { TextField, RaisedButton, ListItem, List } from 'material-ui'
+import Checkbox from 'material-ui/Checkbox'
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
 
 const API_URL = 'https://poniedzialek-ee614.firebaseio.com'
 
@@ -68,11 +70,16 @@ class App extends Component {
             onClick={this.handleClick}>
           </RaisedButton>
         </div>
-        <div>
-          {this.state.tasks.map((task) => (
-            <div key={task.id}>{task.taskName}</div>
+        <List>
+          {this.state.tasks.map(task => (
+            <ListItem
+            key={task.id}
+            primaryText={task.taskName}
+            leftCheckbox={<Checkbox />}
+            rightIcon={<DeleteIcon />}
+            />
           ))}
-        </div>
+        </List>
       </div>
     )
   }
