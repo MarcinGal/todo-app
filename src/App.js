@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { TextField, RaisedButton, ListItem, List } from 'material-ui'
 import Checkbox from 'material-ui/Checkbox'
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton'
 
 const API_URL = 'https://poniedzialek-ee614.firebaseio.com'
 
@@ -58,9 +59,9 @@ class App extends Component {
     fetch(`${API_URL}/tasks/${id}.json`, {
       method: 'DELETE'
     })
-    .then(() => {
-      this.loadData()
-    })
+      .then(() => {
+        this.loadData()
+      })
   }
 
   loadData() {
@@ -99,12 +100,14 @@ class App extends Component {
         <List>
           {this.state.tasks.map(task => (
             <ListItem
-            key={task.id}
-            primaryText={task.taskName}
-            leftCheckbox={<Checkbox />}
-            rightIcon={<DeleteIcon
-            onClick={() => this.handleDeleteClick(task.id)}
-            />}
+              key={task.id}
+              primaryText={task.taskName}
+              leftCheckbox={<Checkbox />}
+              rightIconButton={
+                <IconButton>
+                  <DeleteIcon onClick={() => this.handleDeleteClick(task.id)} />
+                </IconButton>
+              }
             />
           ))}
         </List>
