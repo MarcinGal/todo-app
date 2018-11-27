@@ -54,6 +54,32 @@ class App extends Component {
     }
   }
 
+  handleDeleteClick = (id) => {
+    fetch(`${API_URL}/tasks/${id}.json`, {
+      method: 'DELETE'
+    })
+    .then(() => {
+      this.loadData()
+    })
+  }
+
+  loadData() {
+    fetch(`${API_URL}/tasks.json`)
+      .then(response => response.json())
+      .then(data => {
+        if (!data) {
+          return null;
+        }
+        const array = Object.entries(data)
+        const tasksList = array.map(([id, values]) => {
+          values.id = id
+          return values
+        })
+        this.setState({ tasks: tasksList })
+      })
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -76,7 +102,9 @@ class App extends Component {
             key={task.id}
             primaryText={task.taskName}
             leftCheckbox={<Checkbox />}
-            rightIcon={<DeleteIcon />}
+            rightIcon={<DeleteIcon
+            onClick={() => this.handleDeleteClick(task.id)}
+            />}
             />
           ))}
         </List>
