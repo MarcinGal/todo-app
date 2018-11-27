@@ -1,17 +1,26 @@
 import React, { Component } from 'react'
 import { TextField, RaisedButton } from 'material-ui'
 
+const API_URL = 'https://poniedzialek-ee614.firebaseio.com'
+
 class App extends Component {
   state = {
-    tasks: [
-      { taskName: 'Odkurzanie', completed: false },
-      { taskName: 'Zmywanie naczyń', completed: false }
-    ],
+    tasks: [],
     taskName: ''
   }
 
   handleChange = (event) => {
     this.setState({ taskName: event.target.value })
+  }
+
+  componentWillMount() {
+    fetch(`${API_URL}/tasks.json`)
+      .then(response => response.json())
+      .then(data => {
+        const array = Object.entries(data)
+        const tasksList = array.map(task => task[1])
+this.setState({tasks: tasksList })
+      })
   }
 
   handleClick = (event) => {
@@ -20,7 +29,7 @@ class App extends Component {
       const newTask = ({ taskName: this.state.taskName, completed: false })
       tasks.push(newTask)
       this.setState({ tasks, taskName: '' })
-      fetch('https://poniedzialek-ee614.firebaseio.com/tasks.json', {
+      fetch(`${API_URL}/tasks.json`, {
         method: 'POST',
         body: JSON.stringify(newTask)
       })
