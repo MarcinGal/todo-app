@@ -80,10 +80,19 @@ class App extends Component {
       })
   }
 
+  handleCheck = (task) => {
+    fetch(`${API_URL}/tasks/${task.id}.json`, {
+      method: 'PATCH',
+      body: JSON.stringify({ completed: !task.completed })
+    })
+      .then(() => {
+        this.loadData()
+      })
+  }
 
   render() {
-    return (
-      <div className="App">
+    return(
+      <div className="App" >
         <div>
           <TextField
             hintText="Put your text"
@@ -102,7 +111,7 @@ class App extends Component {
             <ListItem
               key={task.id}
               primaryText={task.taskName}
-              leftCheckbox={<Checkbox />}
+              leftCheckbox={<Checkbox defaultChecked={task.completed} onCheck={() => { this.handleCheck(task) }} />}
               rightIconButton={
                 <IconButton>
                   <DeleteIcon onClick={() => this.handleDeleteClick(task.id)} />
