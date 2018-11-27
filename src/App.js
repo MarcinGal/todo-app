@@ -17,7 +17,7 @@ handleChange = (event) => {
 handleClick = (event) => {
   let tasks =  this.state.tasks
   tasks.push({taskName: this.state.taskName, completed: false})
-  this.state( {tasks })
+  this.setState( {tasks })
 }
 
   render() {
