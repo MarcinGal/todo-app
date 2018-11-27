@@ -15,10 +15,16 @@ class App extends Component {
   }
 
   handleClick = (event) => {
-    let tasks = this.state.tasks
-    tasks.push({ taskName: this.state.taskName, completed: false })
-    this.setState({ tasks, taskName: '' })
-
+    if (this.state.taskName !== '') {
+      let tasks = this.state.tasks
+      const newTask = ({ taskName: this.state.taskName, completed: false })
+      tasks.push(newTask)
+      this.setState({ tasks, taskName: '' })
+      fetch('https://poniedzialek-ee614.firebaseio.com/tasks.json', {
+        method: 'POST',
+        body: JSON.stringify(newTask)
+      })
+    }
   }
 
   render() {
