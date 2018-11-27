@@ -17,22 +17,38 @@ class App extends Component {
     fetch(`${API_URL}/tasks.json`)
       .then(response => response.json())
       .then(data => {
+        if (!data) {
+          return null;
+        }
         const array = Object.entries(data)
-        const tasksList = array.map(task => task[1])
-this.setState({tasks: tasksList })
+        const tasksList = array.map(([id, values]) => {
+          values.id = id
+          return values
+        })
+        this.setState({ tasks: tasksList })
       })
   }
 
-  handleClick = (event) => {
+  handleClick = () => {
     if (this.state.taskName !== '') {
       let tasks = this.state.tasks
-      const newTask = ({ taskName: this.state.taskName, completed: false })
-      tasks.push(newTask)
-      this.setState({ tasks, taskName: '' })
+      let newTask = ({ taskName: this.state.taskName, completed: false })
       fetch(`${API_URL}/tasks.json`, {
         method: 'POST',
         body: JSON.stringify(newTask)
       })
+        .then(response => response.json())
+        .then(data => {
+          newTask.id = data.name
+          tasks.push(newTask)
+          this.setState({ tasks, taskName: '' })
+        })
+    }
+  }
+
+  handleKeyDown = event => {
+    if (event.keyCode === 13) {
+      this.handleClick()
     }
   }
 
@@ -43,7 +59,8 @@ this.setState({tasks: tasksList })
           <TextField
             hintText="Put your text"
             value={this.state.taskName}
-            onChange={this.handleChange}>
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}>
           </TextField>
           <RaisedButton
             label="Add"
@@ -52,8 +69,8 @@ this.setState({tasks: tasksList })
           </RaisedButton>
         </div>
         <div>
-          {this.state.tasks.map((task, index) => (
-            <div>{task.taskName}</div>
+          {this.state.tasks.map((task) => (
+            <div key={task.id}>{task.taskName}</div>
           ))}
         </div>
       </div>
